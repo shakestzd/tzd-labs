@@ -1,0 +1,10 @@
+{
+  "name": "tzd-labs",
+  "description": "Research and publication pipeline — 14 agents, 12 skills, 5 commands covering data extraction, analysis, visualization, writing, peer review, and journal submission. Integrates flowmpl (design system), quartopress (manuscript pipeline), prs-dataviz (medical figures), and a full research toolkit.",
+  "version": "2.0.0",
+  "author": {
+    "name": "Thandolwethu Zwelakhe Dlamini"
+  },
+  "skills": "./skills",
+  "commands": "./commands"
+}
