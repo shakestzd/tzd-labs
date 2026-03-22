@@ -1,0 +1,37 @@
+{
+  "name": "tzd-labs",
+  "owner": {
+    "name": "Thandolwethu Zwelakhe Dlamini",
+    "email": "shakestzd@gmail.com",
+    "url": "https://github.com/shakestzd"
+  },
+  "description": "Research and publication pipeline — 14 agents, 12 skills, 5 commands for Claude Code",
+  "version": "2.0.0",
+  "plugins": [
+    {
+      "name": "tzd-labs",
+      "version": "2.0.0",
+      "source": "./",
+      "description": "Research and publication pipeline — data extraction, analysis, visualization, writing, peer review, and journal submission. Integrates flowmpl, quartopress, prs-dataviz.",
+      "category": "Research",
+      "tags": [
+        "research",
+        "publication",
+        "agents",
+        "visualization",
+        "manuscript",
+        "data-extraction",
+        "peer-review",
+        "flowmpl",
+        "quartopress",
+        "marimo"
+      ],
+      "author": {
+        "name": "Thandolwethu Zwelakhe Dlamini",
+        "url": "https://github.com/shakestzd"
+      },
+      "repository": "https://github.com/shakestzd/tzd-labs",
+      "license": "MIT"
+    }
+  ]
+}
