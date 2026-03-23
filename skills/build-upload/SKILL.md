@@ -41,18 +41,26 @@ The master `build_upload.py` follows this pattern:
 def main():
     setup_output_dir()
 
-    # 1. Render manuscript (Quarto)
+    # 0. Sync templates → rendered sections (parameterized numbers)
+    sync_sections()       # Replaces <<VAR>> placeholders with Stats values
+
+    # 1. Validate prose (arithmetic + semantic consistency)
+    validate_prose()      # Catches stale numbers, plural mismatches, etc.
+
+    # 2. Render manuscript (Quarto)
     build_manuscript()    # Assembles sections, replaces cross-refs, renders .docx
 
-    # 2. Build tables (quartopress.table_builder)
+    # 3. Build tables (quartopress.table_builder)
     build_all_tables()    # Each table from CSV/data -> .docx with three-line borders
 
-    # 3. Copy figures
+    # 4. Copy figures
     copy_figures()        # TIFF files to output with submission naming
 
-    # 4. Response to editor/reviewers
+    # 5. Response to editor/reviewers
     build_response()      # Markdown -> .docx
 ```
+
+**Steps 0-1 are critical.** Never render the manuscript without syncing templates first — this ensures all numbers in prose match the current data. See the `parameterized-manuscript` skill for the full pattern.
 
 ## Cross-Reference Handling
 

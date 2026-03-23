@@ -63,6 +63,7 @@ This is the entry point for all research, analysis, visualization, and publicati
 - **manuscript-setup** — Scaffold Quarto manuscript projects with quartopress
 - **journal-compliance** — Journal-specific submission requirement checklists
 - **build-upload** — Build pipeline for generating complete upload packages
+- **parameterized-manuscript** — Stats dataclass pattern: no hardcoded numbers in prose, template sync, validation
 - **observable-scroll-annotations** — SVG-native scroll annotations for Observable Framework charts
 
 ### Reference
@@ -76,7 +77,7 @@ This is the entry point for all research, analysis, visualization, and publicati
 | `/generate-notebooklm-prompt` | Generate NotebookLM Audio Overview prompt for a chapter |
 | `/build-manuscript` | Build complete journal upload package from source files |
 | `/fix-ai-tells` | Scan and fix AI writing tells across all .qmd files |
-| `/fix-manuscript` | Detect and fix rendering issues (double titles, stale refs, terminology) |
+| `/fix-manuscript` | Detect and fix rendering issues (double titles, stale refs, terminology, hardcoded numbers) |
 | `/set-journal` | Configure manuscript for specific journal template (PRS, JPRAS, Annals) |
 
 ## Cross-Project Integration

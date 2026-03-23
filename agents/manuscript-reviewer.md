@@ -47,6 +47,14 @@ Regardless of specific criteria, always check:
 - **No stale content** (references to removed sections, old table numbers)
 - **Section-appropriate content** (Results in Results, not in Methods)
 
+### Step 3b: Check number parameterization
+Scan the file for hardcoded numbers that should be parameterized:
+- **Unresolved placeholders**: any `<<VAR>>` still in the rendered text means sync_sections.py missed it
+- **Bare numbers at sentence start**: digits should be spelled out (e.g., "183 patients" at line start → "One hundred eighty-three patients")
+- **Plural consistency**: "1 patients" or "1 themes" (singular count + plural noun)
+- **Suspect hardcoded values**: numbers like sample sizes, percentages, p-values, confidence intervals, OR/HR values in prose should trace to a Stats dataclass. If the project has a `stats.py`, verify the numbers match. If not, flag them as candidates for parameterization.
+- **Figure/table numbers**: should come from ordered lists in stats.py, not be manually assigned
+
 ### Step 4: Report
 Output a structured report:
 

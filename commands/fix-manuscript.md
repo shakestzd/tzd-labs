@@ -43,7 +43,21 @@ The most common rendering issue. Happens when both the YAML `title:` field AND a
 
 **Fix:** Report inconsistencies with line numbers and offer to normalize to the dominant usage.
 
-### 7. Word Count Verification
+### 7. Parameterization Check
+**Detection:** Check if the project uses the Stats dataclass pattern:
+- Look for `stats.py` in the project root or `scripts/` directory
+- Look for `_section_templates/` directory with `.qmd.tmpl` files
+- Look for `sync_sections.py`
+- Scan `_sections/*.qmd` for unresolved `<<VAR>>` placeholders
+- Scan for bare numbers at sentence starts (digits, not spelled out)
+- Check for "1 patients" or "1 themes" (singular count + plural noun mismatches)
+
+**Fix:**
+- If `<<VAR>>` placeholders found in rendered sections, run `sync_sections.py` to re-render
+- If bare digits at sentence start, flag with line numbers
+- If no stats.py exists but the project has data-derived numbers in prose, recommend setting up the parameterization pattern (see `parameterized-manuscript` skill)
+
+### 8. Word Count Verification
 **Detection:** Count words in the body text sections (Introduction through Conclusions), excluding markup, comments, and citations. Compare with the count stated on the title page.
 
 **Fix:** Update the title page word count if it doesn't match. Also check abstract word count.
@@ -51,7 +65,7 @@ The most common rendering issue. Happens when both the YAML `title:` field AND a
 ## Execution Protocol
 
 1. **Find manuscript files.** If a specific file was given, use it. Otherwise, search for `.qmd` files with `format:` in YAML or `{{< include` directives.
-2. **Run all 7 checks** on the identified files. Read each section file.
+2. **Run all 8 checks** on the identified files. Read each section file.
 3. **Report findings** in a structured table with Issue, File, Line, and Status columns.
 4. **Apply automatic fixes** for issues that have a clear correct resolution (double titles, stale refs, word count). For issues requiring a choice, present options and ask.
-5. **Suggest next steps:** After fixing, recommend running `/build-manuscript` to regenerate the output, and `/fix-ai-tells` to scan for AI writing markers.
+5. **Suggest next steps:** After fixing, recommend running `/build-manuscript` to regenerate the output, and `/fix-ai-tells` to scan for AI writing markers. If parameterization issues were found, recommend the `parameterized-manuscript` skill.
