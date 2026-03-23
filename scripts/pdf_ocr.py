@@ -39,11 +39,16 @@ def load_env(path: Path) -> None:
 
 
 def get_api_key() -> str:
-    # Try current dir .env, then common project roots
+    # Check environment first (already set by shell profile, CI, etc.)
+    key = os.environ.get("MISTRAL_API_KEY", "")
+    if key:
+        return key
+
+    # Fall back to .env files: script-relative, then working directory
     for candidate in [
-        Path.cwd() / ".env",
         Path(__file__).parent.parent / ".env",
-        Path.home() / "DevProjects" / "Systems" / ".env",
+        Path(__file__).parent / ".env",
+        Path.cwd() / ".env",
     ]:
         load_env(candidate)
 
@@ -66,20 +71,21 @@ def ocr_pdf(pdf_path: Path, api_key: str, include_images: bool = False) -> str:
         purpose="ocr",
     )
 
-    signed_url = client.files.get_signed_url(file_id=uploaded.id, expiry=1)
-
-    print("Running OCR...", file=sys.stderr)
-    response = client.ocr.process(
-        document=DocumentURLChunk(document_url=signed_url.url),
-        model="mistral-ocr-latest",
-        include_image_base64=include_images,
-    )
-
-    # Clean up the uploaded file
     try:
-        client.files.delete(file_id=uploaded.id)
-    except Exception:
-        pass
+        signed_url = client.files.get_signed_url(file_id=uploaded.id, expiry=1)
+
+        print("Running OCR...", file=sys.stderr)
+        response = client.ocr.process(
+            document=DocumentURLChunk(document_url=signed_url.url),
+            model="mistral-ocr-latest",
+            include_image_base64=include_images,
+        )
+    finally:
+        # Always clean up the uploaded file, even if get_signed_url or process fails
+        try:
+            client.files.delete(file_id=uploaded.id)
+        except Exception:
+            pass
 
     pages = []
     for i, page in enumerate(response.pages, 1):
@@ -98,17 +104,20 @@ def ocr_pdf_as_dict(pdf_path: Path, api_key: str) -> dict:
         file={"file_name": pdf_path.stem, "content": pdf_path.read_bytes()},
         purpose="ocr",
     )
-    signed_url = client.files.get_signed_url(file_id=uploaded.id, expiry=1)
-    response = client.ocr.process(
-        document=DocumentURLChunk(document_url=signed_url.url),
-        model="mistral-ocr-latest",
-        include_image_base64=False,
-    )
 
     try:
-        client.files.delete(file_id=uploaded.id)
-    except Exception:
-        pass
+        signed_url = client.files.get_signed_url(file_id=uploaded.id, expiry=1)
+        response = client.ocr.process(
+            document=DocumentURLChunk(document_url=signed_url.url),
+            model="mistral-ocr-latest",
+            include_image_base64=False,
+        )
+    finally:
+        # Always clean up the uploaded file, even on failure
+        try:
+            client.files.delete(file_id=uploaded.id)
+        except Exception:
+            pass
 
     return {
         "file": str(pdf_path),

@@ -19,8 +19,8 @@ TZD Labs is a curated collection of **14 specialized agents**, **12 knowledge sk
 # Clone the plugin
 git clone https://github.com/shakestzd/tzd-labs.git
 
-# Install as a Claude Code plugin
-claude --plugin-dir /path/to/tzd-labs
+# Install as a Claude Code plugin (use actual clone path)
+claude --plugin-dir ~/DevProjects/tzd-labs
 ```
 
 ### Recommended packages

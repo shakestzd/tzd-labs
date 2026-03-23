@@ -73,6 +73,17 @@ The prompt MUST follow these rules:
 - Abbreviate: HR, BP, HTN, HF, Rx, DOC, MOA; use = instead of "is", → instead of "leads to"
 - Remove articles (a, the) and filler words aggressively
 
+### Density Rules (prevents podcasts from running out of time)
+The char limit is necessary but NOT sufficient. Even under 4,900 chars, too many dense topics will cause NotebookLM to skip the last sections. Apply these limits:
+
+| Content Density | Max Pages | Max Numbered Sections | Target Chars |
+|----------------|-----------|----------------------|-------------|
+| **High** (biochem, pharmacology, microbiology) | 8-10 | 5-6 | 3,000-4,000 |
+| **Medium** (organ systems, clinical) | 10-14 | 7-8 | 3,500-4,500 |
+| **Low** (ethics, psychiatry, biostatistics) | 14-16 | 8-9 | 4,000-4,800 |
+
+**If a prompt has >6 dense sections or >9 medium sections, split it further** — even if it's under the char limit.
+
 ## Step 4: Generate the Vignettes Source File
 
 Create a separate markdown file with supplementary content organized by topic:
@@ -82,9 +93,9 @@ Create a separate markdown file with supplementary content organized by topic:
 
 ## Step 5: Write the Output Files
 
-Write files into the chapter's folder at `markdown/{chapter_number}_{chapter_name}/`:
-1. `notebooklm_prompt.md` (or `notebooklm_prompt_A.md`, `_B.md`, `_C.md` if multi-part)
-2. `notebooklm_vignettes.md` — shared across all parts
+Write files to the project output directories:
+1. `notebooklm_prompts/{chapter_filename}.md` (or `{chapter_filename}_A.md`, `_B.md`, `_C.md` if multi-part)
+2. `notebooklm_sources/{chapter_filename}_vignettes.md` — shared across all parts
 
 ### Single-Part Template
 
@@ -93,7 +104,7 @@ Write files into the chapter's folder at `markdown/{chapter_number}_{chapter_nam
 
 ## Sources to Upload
 1. **Primary**: Chapter {N} PDF
-2. **Supplementary**: `notebooklm_vignettes.md` from this folder
+2. **Supplementary**: `notebooklm_sources/{chapter_filename}_vignettes.md`
 
 ## Prompt to Paste into NotebookLM "Customize" Box
 
@@ -108,8 +119,8 @@ Write files into the chapter's folder at `markdown/{chapter_number}_{chapter_nam
 # NotebookLM Audio Overview — {Chapter Name} (Part {X})
 
 ## Sources to Upload
-1. **Primary**: `{NN}{X}_{descriptive_name}.pdf` from this folder
-2. **Supplementary**: `notebooklm_vignettes.md` from this folder
+1. **Primary**: `{NN}{X}_{descriptive_name}.pdf`
+2. **Supplementary**: `notebooklm_sources/{chapter_filename}_vignettes.md`
 
 ## Prompt to Paste into NotebookLM "Customize" Box
 
@@ -123,7 +134,7 @@ Write files into the chapter's folder at `markdown/{chapter_number}_{chapter_nam
 After writing the prompt file, you MUST run the validation script:
 
 ```bash
-bash /Users/shakes/DevProjects/tzd-labs/scripts/validate_notebooklm_prompt.sh <prompt_file.md>
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/validate_notebooklm_prompt.sh <prompt_file.md>
 ```
 
 The script extracts the content between the ``` markers and checks the character count against the 4,900 character limit. If the prompt is over the limit:

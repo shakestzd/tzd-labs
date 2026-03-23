@@ -26,8 +26,8 @@ if [[ ! -f "$FILE" ]]; then
   exit 1
 fi
 
-# Extract content between the first pair of ``` markers
-PROMPT_CONTENT=$(sed -n '/^```$/,/^```$/p' "$FILE" | sed '1d;$d')
+# Extract content between the first pair of ``` markers (allowing optional info strings like ```markdown)
+PROMPT_CONTENT=$(sed -n '/^```[a-zA-Z]*$/,/^```$/p' "$FILE" | sed '1d;$d')
 
 if [[ -z "$PROMPT_CONTENT" ]]; then
   echo "❌ No code block found in $FILE"

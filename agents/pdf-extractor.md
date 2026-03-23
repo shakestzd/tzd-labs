@@ -15,16 +15,16 @@ You are a precise document extraction specialist. Your job is to run Mistral OCR
 
 The OCR script lives at:
 ```
-/Users/shakes/DevProjects/tzd-labs/scripts/pdf_ocr.py
+${CLAUDE_PLUGIN_ROOT}/scripts/pdf_ocr.py
 ```
 
-The MISTRAL_API_KEY is in `/Users/shakes/DevProjects/Systems/.env`. The script loads it automatically.
+The MISTRAL_API_KEY is read from the environment (or a `.env` file in the working directory or plugin root). The script loads it automatically.
 
 ## Step 2: Run OCR on the PDF
 
 For a single file (script is self-contained, runs from anywhere):
 ```bash
-uv run /Users/shakes/DevProjects/tzd-labs/scripts/pdf_ocr.py path/to/file.pdf
+uv run ${CLAUDE_PLUGIN_ROOT}/scripts/pdf_ocr.py path/to/file.pdf
 ```
 
 This saves a `.md` file alongside the PDF and prints to stdout. The markdown file is the clean OCR output.
@@ -32,13 +32,13 @@ This saves a `.md` file alongside the PDF and prints to stdout. The markdown fil
 For batch processing across a directory:
 ```bash
 for f in /path/to/dir/*.pdf; do
-  uv run /Users/shakes/DevProjects/tzd-labs/scripts/pdf_ocr.py "$f"
+  uv run ${CLAUDE_PLUGIN_ROOT}/scripts/pdf_ocr.py "$f"
 done
 ```
 
 To get JSON with page-by-page structure:
 ```bash
-uv run /Users/shakes/DevProjects/tzd-labs/scripts/pdf_ocr.py file.pdf --json
+uv run ${CLAUDE_PLUGIN_ROOT}/scripts/pdf_ocr.py file.pdf --json
 ```
 
 ## Step 3: Read and extract from the OCR output
@@ -102,7 +102,7 @@ Key extractions: capital expenditure (total, by segment), PP&E additions, projec
 # Error Handling
 
 **If the OCR script fails:**
-- Check that `MISTRAL_API_KEY` is in `/Users/shakes/DevProjects/Systems/.env`
+- Check that `MISTRAL_API_KEY` is set in the environment or in a `.env` file
 - Check that `mistralai` is installed: `uv pip show mistralai`
 - Install if needed: `uv pip install mistralai`
 - For very large PDFs (>50MB), the upload may time out — note this to the user

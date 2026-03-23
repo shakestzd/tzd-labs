@@ -69,7 +69,7 @@ manuscript-project/
 | Journal | Word Limit | Abstract | Figures | Tables | Reference Style |
 |---------|-----------|----------|---------|--------|-----------------|
 | PRS | 3,000 (+500 ext) | 250, structured | 300 DPI TIFF | Separate .docx | AMA |
-| JPRAS | 4,000 | 250, structured | 300 DPI TIFF/EPS | Separate .docx | Vancouver |
+| JPRAS | 4,000 | 250, unstructured | 300 DPI TIFF/EPS | Embedded | Vancouver |
 | Ann Plast Surg | 3,000 | 200, unstructured | 300 DPI TIFF | Embedded | AMA |
 
 ## Key Principles
