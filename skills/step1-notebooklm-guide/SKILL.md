@@ -134,12 +134,58 @@ Integrate from Chapter 21 where relevant:
 - Topics were named but some sub-details were omitted
 - Missing items were ones NOT explicitly named: Isoproterenol, Mirabegron, Phentolamine, Bisphenol A, Radon, Echinacea, Pyruvate metabolism
 
-### What achieved ~97% coverage (Chapter 1 V2, V3; Chapter 15A):
+### What achieved ~97% coverage (Ch1 V2/V3, Ch15A, Ch16A, Ch17A/B/C):
 - Revised prompt explicitly named every detail → recovered 15/15 previously-missed items
 - PDF-only source was sufficient — adding OCR markdown did not improve coverage
-- Strategy scaled to Ch15A (completely different chapter type) on first attempt
-- ~97% appears to be the practical ceiling — last 3% are isolated sub-details NotebookLM occasionally skips even when named
-- For chapters >20 pages, split into multiple podcasts to stay under the 4,900 char prompt limit
+- Strategy scaled across 10 podcasts consistently at ~97%
+- ~97% appears to be the practical ceiling — last 3% are isolated sub-details NotebookLM occasionally skips
+
+### What caused 94% coverage (Ch16B — ETC skipped):
+- The prompt was under the char limit (3,964 chars) but covered TOO MANY DENSE TOPICS (7 biochemistry sections)
+- NotebookLM ran out of podcast time (~77 min) before reaching the ETC section at the end
+- **Lesson: The constraint is content density per podcast, not just prompt chars**
+- Fix: Split into B1 (5 sections) and B2 (6 sections) → each covers fewer topics in depth
+
+## Chapter Splitting Strategy
+
+Split decisions are based on **two constraints**: the 4,900 char prompt limit AND content density per podcast.
+
+### Pages-per-Podcast Guidelines
+
+| Content Density | Max Pages/Podcast | Examples |
+|----------------|-------------------|---------|
+| **High** (biochem pathways, pharmacology, microbiology organisms) | **8-10 pages** | Biochemistry, Infectious Disease, General Principles |
+| **Medium** (organ systems, clinical medicine) | **10-14 pages** | Cardiology, Respiratory, Renal, GI |
+| **Low** (clinical, ethics, psychiatry, biostatistics) | **14-16 pages** | Social Sciences, Psychiatry, Biostatistics |
+
+### Prompt Sections-per-Podcast Guidelines
+
+| Content Density | Max Numbered Sections | Sweet Spot |
+|----------------|----------------------|-----------|
+| **High** | 5-6 sections | ~3,000-4,000 chars |
+| **Medium** | 7-8 sections | ~3,500-4,500 chars |
+| **Low** | 8-9 sections | ~4,000-4,800 chars |
+
+### Split Decision Flowchart
+
+1. Count source pages
+2. Classify content density (high/medium/low)
+3. Divide pages by max-pages-per-podcast → number of parts
+4. Find natural topic boundaries for split points
+5. Write prompts with appropriate section counts per part
+6. **Validate: if a prompt has >6 dense sections or >9 medium sections, split further**
+7. After validation, split PDF and OCR markdown at matching boundaries
+
+### Tested Split Examples
+
+| Chapter | Pages | Density | Parts | Result |
+|---------|-------|---------|-------|--------|
+| Ch18 Pathology | 8 | Medium | 1 | 100% |
+| Ch01 General Principles | 16 | High | 1 | 97% |
+| Ch15 Infectious Disease | 30 | High | 2 (15+15) | 97% |
+| Ch06 Gastroenterology | 36 | Medium | 3 (12+12+12) | Not tested |
+| Ch16 Biochemistry | 27 | High | 3 (14+6+7) | A=100%, B1/B2=pending |
+| Ch17 Hematology/Onc/Immuno | 36 | Medium | 3 (14+13+9) | 97% |
 
 ### Hard Limit
 **NotebookLM's customization box silently truncates at ~5,000 characters.** Prompts MUST stay under 4,900 chars. Use dense notation: = instead of "is", → instead of "leads to", drop articles, abbreviate (HR, BP, HTN, HF, Rx, DOC).
